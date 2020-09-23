@@ -107,12 +107,10 @@ jobs:
 
    - name: Helm Upgrade
      run: |
-        cat ./kubeconfig
-#       helm registry login ${{ env.containerRegistry }} --username ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }}
-#       helm chart pull ${{ env.containerRegistry }}/helm/content-web:v${{ env.tag }}
-#       helm chart export ${{ env.containerRegistry }}/helm/content-web:v${{ env.tag }} --destination ./upgrade
-#       cat ./kubeconfig
-#       helm upgrade web ./upgrade/web
+       helm registry login ${{ env.containerRegistry }} --username ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }}
+       helm chart pull ${{ env.containerRegistry }}/helm/content-web:v${{ env.tag }}
+       helm chart export ${{ env.containerRegistry }}/helm/content-web:v${{ env.tag }} --destination ./upgrade
+       helm upgrade web ./upgrade/web
      env:
        KUBECONFIG: './kubeconfig'
        HELM_EXPERIMENTAL_OCI: 1
