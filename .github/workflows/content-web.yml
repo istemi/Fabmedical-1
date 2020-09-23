@@ -28,41 +28,41 @@ env:
 # Jobs define the actions that take place when code is pushed to the master branch
 jobs:
 
- build-and-publish-docker-image:
-   name: Build and Push Docker Image
-   runs-on: ubuntu-latest
-   steps:
-   # Checkout the repo
-   - uses: actions/checkout@master
+#  build-and-publish-docker-image:
+#    name: Build and Push Docker Image
+#    runs-on: ubuntu-latest
+#    steps:
+#    # Checkout the repo
+#    - uses: actions/checkout@master
 
-   - name: Build and push an image to container registry
-     uses: docker/build-push-action@v1
-     with:
-       username: ${{ secrets.ACR_USERNAME }}
-       password: ${{ secrets.ACR_PASSWORD }}
-       path: ${{ env.dockerfilePath  }}
-       dockerfile: '${{ env.dockerfilePath }}/Dockerfile'
-       registry: ${{ env.containerRegistry }}
-       repository: ${{ env.imageRepository }}
-       tags: ${{ env.tag }},latest
+#    - name: Build and push an image to container registry
+#      uses: docker/build-push-action@v1
+#      with:
+#        username: ${{ secrets.ACR_USERNAME }}
+#        password: ${{ secrets.ACR_PASSWORD }}
+#        path: ${{ env.dockerfilePath  }}
+#        dockerfile: '${{ env.dockerfilePath }}/Dockerfile'
+#        registry: ${{ env.containerRegistry }}
+#        repository: ${{ env.imageRepository }}
+#        tags: ${{ env.tag }},latest
 
 
 
- build-and-push-helm-chart:
-   name: Build and Push Helm Chart
-   runs-on: ubuntu-latest
-   needs: [build-and-publish-docker-image]
-   steps:
-   # Checkout the repo
-   - uses: actions/checkout@master
+#  build-and-push-helm-chart:
+#    name: Build and Push Helm Chart
+#    runs-on: ubuntu-latest
+#    needs: [build-and-publish-docker-image]
+#    steps:
+#    # Checkout the repo
+#    - uses: actions/checkout@master
 
-   - name: Helm Install
-     uses: azure/setup-helm@v1
+#    - name: Helm Install
+#      uses: azure/setup-helm@v1
 
-   - name: Helm Repo Add
-     run: |
-       helm repo add ${{ env.containerRegistryName }} https://${{ env.containerRegistry }}/helm/v1/repo --username ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }}
-     env:
+#    - name: Helm Repo Add
+#      run: |
+#        helm repo add ${{ env.containerRegistryName }} https://${{ env.containerRegistry }}/helm/v1/repo --username ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }}
+#      env:
        HELM_EXPERIMENTAL_OCI: 1
 
    - name: Helm Chart Save
@@ -110,6 +110,7 @@ jobs:
        helm registry login ${{ env.containerRegistry }} --username ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }}
        helm chart pull ${{ env.containerRegistry }}/helm/content-web:v${{ env.tag }}
        helm chart export ${{ env.containerRegistry }}/helm/content-web:v${{ env.tag }} --destination ./upgrade
+       cat ./kubeconfig
        helm upgrade web ./upgrade/web
      env:
        KUBECONFIG: './kubeconfig'
