@@ -98,20 +98,20 @@ jobs:
    - name: kubeconfig
      run: echo "${{ secrets.KUBECONFIG }}" >> kubeconfig
 
-   - name: Helm Repo Add
-     run: |
-       helm repo add ${{ env.containerRegistry }} https://${{ env.containerRegistry }}/helm/v1/repo --username ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }}
-       helm repo update
-     env:
-       HELM_EXPERIMENTAL_OCI: 1
+#    - name: Helm Repo Add
+#      run: |
+#        helm repo add ${{ env.containerRegistry }} https://${{ env.containerRegistry }}/helm/v1/repo --username ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }}
+#        helm repo update
+#      env:
+#        HELM_EXPERIMENTAL_OCI: 1
 
    - name: Helm Upgrade
      run: |
-       helm registry login ${{ env.containerRegistry }} --username ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }}
-       helm chart pull ${{ env.containerRegistry }}/helm/content-web:v${{ env.tag }}
-       helm chart export ${{ env.containerRegistry }}/helm/content-web:v${{ env.tag }} --destination ./upgrade
+#       helm registry login ${{ env.containerRegistry }} --username ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }}
+#       helm chart pull ${{ env.containerRegistry }}/helm/content-web:v${{ env.tag }}
+#       helm chart export ${{ env.containerRegistry }}/helm/content-web:v${{ env.tag }} --destination ./upgrade
        cat ./kubeconfig
-       helm upgrade web ./upgrade/web
+#       helm upgrade web ./upgrade/web
      env:
        KUBECONFIG: './kubeconfig'
        HELM_EXPERIMENTAL_OCI: 1
